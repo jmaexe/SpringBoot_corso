@@ -4,45 +4,43 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
+import com.demo.tutorial.person.Person;
 import jakarta.transaction.Transactional;
 
 @Service
 public class FeedbackService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final FeedbackRepository feedbackRepository;
 
-    @Transactional
-    public void saveFeedback(Feedback feedback) {
-        entityManager.persist(feedback);
+    public FeedbackService(FeedbackRepository feedbackRepository) {
+        this.feedbackRepository = feedbackRepository;
     }
 
-    @Transactional
+    public void saveFeedback(Feedback feedback) {
+        feedbackRepository.save(feedback);
+    }
+
     public void saveAll(List<Feedback> feedbacks) {
         for (Feedback feedback : feedbacks) {
-            entityManager.persist(feedback);
+            feedbackRepository.save(feedback);
         }
     }
 
     public Feedback getFeedbackById(Long id) {
-        Feedback query = entityManager.find(Feedback.class, id);
-        return query;
+        return feedbackRepository.findById(id).orElse(null);
     }
 
     public List<Feedback> getAll() {
-        TypedQuery<Feedback> query = entityManager.createQuery("SELECT f FROM Feedback f", Feedback.class);
-        System.out.println("query result : " + query);
-        return query.getResultList();
+
+        return feedbackRepository.findAll();
     }
 
-    @Transactional
-    public void updateFeedback(Feedback updatedfeedback) {
-        Feedback feedback = entityManager.find(Feedback.class, updatedfeedback.getId());
-        feedback.setCommento(updatedfeedback.getCommento());
-        feedback.setPerson(updatedfeedback.getPerson());
-        entityManager.merge(feedback);
+    public void updateFeedback(Long id, String commento, Person person) {
+        feedbackRepository.save(new Feedback(id, person, commento));
     }
+
+    public void deleteById(Long id) {
+        feedbackRepository.deleteById(id);
+    }
+
 }

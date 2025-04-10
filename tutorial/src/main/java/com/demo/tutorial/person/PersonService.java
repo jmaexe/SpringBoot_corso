@@ -14,44 +14,73 @@ public class PersonService {
 
     @PersistenceContext
     private EntityManager entityManager;
+    private PersonRepository personRepository;
 
-    @Transactional
-    public void savePerson(Person person) {
-        entityManager.persist(person);
+    public PersonService(PersonRepository personRepository) {
+        this.personRepository = personRepository;
     }
 
-    @Transactional
-    public void saveAll(List<Person> list) {
-        for (Person person : list) {
-            entityManager.persist(person);
-        }
+    public List<Person> findAll() {
+        return personRepository.findAll();
     }
 
-    public List<Person> getAll() {
-        TypedQuery<Person> query = entityManager.createQuery("SELECT p FROM Person p", Person.class);
-        return query.getResultList();
+    public Person findById(Long id) {
+        return personRepository.findById(id).orElse(null);
     }
 
-    public Person getPersonPerId(Long id) {
-        Person query = entityManager.find(Person.class, id);
-        return query;
+    public void save(Person person) {
+        personRepository.save(person);
     }
 
-    @Transactional
-    public void deletePersonPerId(Long id) {
-        Person p = entityManager.find(Person.class, id);
-        if (p != null) {
-            entityManager.remove(p);
-        }
-
+    public void deleteById(Long id) {
+        personRepository.deleteById(id);
     }
 
-    @Transactional
-    public void updatePerson(Long id, PersonDTO p) {
-        Person person = entityManager.find(Person.class, id);
-        person.setCognome(p.getCognome());
-        person.setNome(p.getNome());
-        person.setEta(p.getEta());
-        entityManager.merge(person);
+    public void update(Long id, PersonDTO personDTO) {
+        personRepository.save(new Person(id, personDTO.getNome(), personDTO.getCognome(), personDTO.getEta()));
     }
+
+    // @Transactional
+    // public void savePerson(Person person) {
+    // entityManager.persist(person);
+    // }
+
+    // @Transactional
+    // public void saveAll(List<Person> list) {
+    // for (Person person : list) {
+    // entityManager.persist(person);
+    // }
+    // }
+
+    // public List<Person> getAll() {
+    // TypedQuery<Person> query = entityManager.createQuery("SELECT p FROM Person
+    // p", Person.class);
+    // return query.getResultList();
+    // }
+
+    // public Person getPersonPerId(Long id) {
+    // Person query = entityManager.find(Person.class, id);
+    // return query;
+    // }
+
+    // @Transactional
+    // public void deletePersonPerId(Long id) {
+    // Person p = entityManager.find(Person.class, id);
+    // if (p != null) {
+    // entityManager.remove(p);
+    // }
+
+    // }
+
+    // @Transactional
+    // public void updatePerson(Person p) {
+    // System.out.println(p);
+    // // Person person = entityManager.find(Person.class, id);
+    // // person.setCognome(p.getCognome());
+    // // person.setNome(p.getNome());
+    // // person.setEta(p.getEta());
+    // // entityManager.merge(person);
+    // entityManager.refresh(p);
+    // ;
+    // }
 }

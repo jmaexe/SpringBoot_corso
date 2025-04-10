@@ -20,6 +20,13 @@ public class Person {
 
     }
 
+    public Person(Long id, String nome, String cognome, int eta) {
+        this.id = id;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.eta = eta;
+    }
+
     public Person(String nome, String cognome, int eta) {
         this.nome = nome;
         this.cognome = cognome;

@@ -31,7 +31,6 @@ public class FeedbackService {
     }
 
     public List<Feedback> getAll() {
-
         return feedbackRepository.findAll();
     }
 

@@ -33,10 +33,13 @@ public class FeedbackController {
     @GetMapping("")
     public ResponseEntity<?> getAllFeedbacks() {
         List<Feedback> lista = feedbackService.getAll();
-        System.out.println(lista);
+        for (Feedback feedback : lista) {
+            System.out.println("Feedback: " + feedback.getUserId());
+        }
         if (lista.isEmpty()) {
             return new ResponseEntity<String>("lista vuota", HttpStatus.OK);
         }
+
         return new ResponseEntity<List<Feedback>>(lista, HttpStatus.OK);
     }
 

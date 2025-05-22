@@ -30,6 +30,7 @@ public class PersonService {
 
     public void save(Person person) {
         personRepository.save(person);
+        throw new RuntimeException("test");
     }
 
     public void deleteById(Long id) {
